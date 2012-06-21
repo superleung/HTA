@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发送记录-By Super</title>
+<meta http-equiv="x-ua-compatible" content="ie=6">
+<HTA:APPLICATION ID=〃SUPER〃
+BORDER=〃none〃 
+BORDERSTYLE=〃raised〃 
+MaximizeButton="no"
+SysMenu="yes"
+selection="no"
+contextmenu="no"
+scroll="no"
+caption="yes"
+
+>
+<script language="vbscript">
+sub doFile
+	str1=document.getElementById("Content").value
+	f1=document.getElementById("sFile").value
+	d1=document.getElementById("Dev").value
+	dFile f1,str1,d1
+end sub
+sub window_onload
+	window.resizeTo 500, 300
+end sub
+sub dFile(filename,Content,Device)
+    Randomize
+
+	Const ForReading=1
+	Const ForWriting=2
+	dim fso,ts,s,ws,str1,dev,tel,tmpS,devS,numS
+	str1="    "&Content
+	
+	t1=now
+	
+ 	Set fso = CreateObject("Scripting.FileSystemObject")
+	Set ts = fso.OpenTextFile(filename, ForReading)
+	s = ts.ReadAll
+	ts.close
+
+	tel=Split(s,vbNewLine)
+	l=UBound(tel)
+	For i=0 To l
+		tmpS=""
+		
+		numS=CStr(i+1)
+		While Len(numS)<7
+			numS="0"&numS
+		Wend
+		
+		
+		dev=Int(Rnd()*Device)+1
+		If dev<10 Then
+			devS="0"&CStr(dev)
+		Else
+			devS=CStr(dev)
+		End If
+		
+		tmpS="#" & numS & "    提交完成    设备ID:" & devS & "    " & tel(i) & str1
+		
+		tel(i)=tmpS	
+	Next
+	s=Join(tel,vbNewLine)
+
+ 	Set ws = fso.OpenTextFile(filename, ForWriting,true)
+	ws.write(s)
+	ws.Close
+	t2=Now
+	msgbox "转换完成!    开始时间："&t1&"    完成时间："&t2
+end sub
+</script>
+<style type="text/css">
+.BigFont {
+	font-size: 18px;
+}
+.gradual_ff_f2 {
+	filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#ffffff,endcolorstr=#4682b4,gradientType=0);
+
+}
+</style>
+</head>
+
+<body class="gradual_ff_f2" onresize="window_onload">
+<p class="BigFont">
+  <label for="sFile">文件名：</label>
+  <input name="sFile" type="file" class="BigFont" id="sFile" />
+</p>
+<p class="BigFont">
+  <label for="Content" class="BigFont">内&nbsp;&nbsp;&nbsp;&nbsp;容：</label>
+  <textarea name="Content" cols="31" rows="5" class="BigFont" id="Content"></textarea>
+</p>
+<p class="BigFont">
+  <label for="Dev">设备数：</label>
+  <input name="Dev" type="text" class="BigFont" id="Dev" size="26" />
+  <input name="cmd" type="button" class="BigFont" id="cmd" onclick="doFile" value="开始处理" />
+</p>
+</body>
+</html>

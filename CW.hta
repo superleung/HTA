@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>ChangWord</title>
+<HTA:APPLICATION
+  APPLICATIONNAME="ChangWord"
+  ID="ChangWord"
+  VERSION="1.0"
+  BORDER="dialog"
+  MAXIMIZEBUTTON="no"
+  SCROLL="no"/>
+</head>
+
+<script language="VBScript">
+
+Sub Window_OnLoad
+  'This method will be called when the application loads
+  'Add your code here
+    width=480
+  	height=380
+  	self.ResizeTo width,height
+End Sub
+
+Sub CW_OnClick
+	txt1=document.all.srcWord.value
+	For i=0 To UWord
+		If InStr(txt1,word(i,0))>0 Then txt1=Replace(txt1,word(i,0),word(i,1))
+	Next
+	document.all.outWord.value=txt1
+End Sub
+
+Function ReadWord(filename)
+	Const ForReading=1
+	Const ForWriting=2
+	dim fso,ts,s,ws,str1,dev,tel,tmpS,devS,numS
+	
+ 	Set fso = CreateObject("Scripting.FileSystemObject")
+	Set ts = fso.OpenTextFile(filename, ForReading)
+	s = ts.ReadAll
+	ts.close
+
+	tel=Split(s,vbNewLine)
+	l=UBound(tel)
+	ReDim a(l,1)
+	For i=0 To l
+		k=InStr(tel(i),":")
+		a(i,0)=Left(tel(i),k-1)
+		a(i,1)=Right(tel(i),Len(tel(i))-k)
+	Next
+	ReadWord=a
+End Function
+
+word=ReadWord("word.txt")
+UWord=UBound(word)
+
+</script>
+
+<body bgcolor="white">
+
+<!--Add your controls here-->
+<textarea id="srcWord" cols="60" rows="8"></textarea>
+<br />
+<input type="button" value="×ª»»" id="cw" />
+<br />
+<textarea id="outWord" cols="60" rows="8"></textarea>
+<!--{{InsertControlsHere}}-Do not remove this line-->
+</body>
+</html>
